@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .chart-container {
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="card form-section">
+            <h2>Add Order Details</h2>
+            <input type="text" id="orderName" placeholder="Order Name">
+            <input type="number" id="orderAmount" placeholder="Order Amount">
+            <select id="orderType">
+                <option value="product">Product Sale</option>
+                <option value="service">Service</option>
+            </select>
+            <button onclick="addOrder()">Add Order</button>
+
+            <h2>Add Expense Details</h2>
+            <input type="text" id="expenseName" placeholder="Expense Name">
+            <input type="number" id="expenseAmount" placeholder="Expense Amount">
+            <select id="expenseType">
+                <option value="operational">Operational</option>
+                <option value="marketing">Marketing</option>
+                <option value="salaries">Salaries</option>
+            </select>
+            <button onclick="addExpense()">Add Expense</button>
+        </div>
+
+        <div class="card">
+            <h2>Business Analytics</h2>
+            <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="expenseChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let orders = [];
+        let expenses = [];
+
+        function addOrder() {
+            const name = document.getElementById('orderName').value;
+            const amount = parseFloat(document.getElementById('orderAmount').value);
+            const type = document.getElementById('orderType').value;
+
+            if (name && amount) {
+                orders.push({ name, amount, type, date: new Date() });
+                updateCharts();
+                clearOrderInputs();
+            }
+        }
+
+        function addExpense() {
+            const name = document.getElementById('expenseName').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            const type = document.getElementById('expenseType').value;
+
+            if (name && amount) {
+                expenses.push({ name, amount, type, date: new Date() });
+                updateCharts();
+                clearExpenseInputs();
+            }
+        }
+
+        function updateCharts() {
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(revenueCtx, {
+                type: 'bar',
+                data: {
+                    labels: orders.map(o => o.name),
+                    datasets: [{
+                        label: 'Order Revenue',
+                        data: orders.map(o => o.amount),
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                    }]
+                }
+            });
+
+            // Expense Chart
+            const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+            new Chart(expenseCtx, {
+                type: 'pie',
+                data: {
+                    labels: expenses.map(e => e.type),
+                    datasets: [{
+                        data: expenses.map(e => e.amount),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)'
+                        ]
+                    }]
+                }
+            });
+        }
+
+        function clearOrderInputs() {
+            document.getElementById('orderName').value = '';
+            document.getElementById('orderAmount').value = '';
+        }
+
+        function clearExpenseInputs() {
+            document.getElementById('expenseName').value = '';
+            document.getElementById('expenseAmount').value = '';
+        }
+    </script>
+</body>
+</html>
