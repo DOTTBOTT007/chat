@@ -281,7 +281,7 @@
 
   const supabaseUrl = 'https://jaykercqfzzwjivuzkpj.supabase.co'
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpheWtlcmNxZnp6d2ppdnV6a3BqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4NDUyMDgsImV4cCI6MjA1ODQyMTIwOH0.FEw7uHf0zia6NTW4Npy6JA1o3b8lrBbVc70CRLRBuA4'
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+   const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
        
        
 
@@ -300,33 +300,39 @@
             if (section === 'analytics') renderAnalytics();
         }
 
-        // Order Form Submission
-        document.getElementById('order-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const orderName = document.getElementById('order-name').value;
-            const orderSku = document.getElementById('order-sku').value;
-            const orderPayer = document.getElementById('order-payer').value;
-            const orderAmount = parseFloat(document.getElementById('order-amount').value);
+       document.getElementById('order-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const orderName = document.getElementById('order-name').value;
+    const orderSku = document.getElementById('order-sku').value;
+    const orderPayer = document.getElementById('order-payer').value;
+    const orderAmount = parseFloat(document.getElementById('order-amount').value);
 
-            const { data, error } = await supabase
-                .from('orders')
-                .insert([{
-                    order_name: orderName,
-                    sku: orderSku,
-                    payer: orderPayer,
-                    amount: orderAmount,
-                    created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString()
-                }]);
+    try {
+        const { data, error } = await supabase
+            .from('orders')
+            .insert([{
+                order_name: orderName,
+                sku: orderSku,
+                payer: orderPayer,
+                amount: orderAmount,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            }]);
 
-            if (error) {
-                alert('Error adding order: ' + error.message);
-            } else {
-                alert('Order added successfully!');
-                fetchOrders();
-            }
-        });
+        console.log('Supabase Insert Data:', data);
 
+        if (error) {
+            console.error('Supabase Error:', error);
+            alert('Error adding order: ' + JSON.stringify(error));
+        } else {
+            alert('Order added successfully!');
+            fetchOrders();
+        }
+    } catch (exception) {
+        console.error('Unexpected error:', exception);
+        alert('An unexpected error occurred: ' + exception.message);
+    }
+});
         // Expense Form Submission
         document.getElementById('expense-form').addEventListener('submit', async (e) => {
             e.preventDefault();
