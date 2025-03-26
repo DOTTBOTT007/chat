@@ -146,10 +146,10 @@
     <script>
         // Supabase Configuration
         
-import { createClient } from '@supabase/supabase-js'
-const supabaseUrl = 'https://jaykercqfzzwjivuzkpj.supabase.co'
-const supabaseKey = process.env.SUPABASE_KEY
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabaseUrl = 'https://jaykercqfzzwjivuzkpj.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpheWtlcmNxZnp6d2ppdnV6a3BqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4NDUyMDgsImV4cCI6MjA1ODQyMTIwOH0.FEw7uHf0zia6NTW4Npy6JA1o3b8lrBbVc70CRLRBuA4';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
         // SKU Mappings
         const skuMappings = {
             'Nightsuit': [
