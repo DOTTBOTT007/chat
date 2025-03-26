@@ -197,32 +197,41 @@
         });
 
         // Order Form Submission
-        document.getElementById('orderForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const orderData = {
-                category: document.getElementById('productCategory').value,
-                sku: document.getElementById('productSku').value,
-                platform: document.getElementById('salesPlatform').value,
-                team_member: document.getElementById('teamMember').value,
-                amount: parseFloat(document.getElementById('orderAmount').value),
-                units: parseInt(document.getElementById('orderUnits').value),
-                order_date: document.getElementById('orderDate').value,
-                remarks: document.getElementById('orderRemarks').value
-            };
+       document.getElementById('orderForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const orderData = {
+        category: document.getElementById('productCategory').value,
+        sku: document.getElementById('productSku').value,
+        platform: document.getElementById('salesPlatform').value,
+        team_member: document.getElementById('teamMember').value,
+        amount: parseFloat(document.getElementById('orderAmount').value),
+        units: parseInt(document.getElementById('orderUnits').value),
+        order_date: document.getElementById('orderDate').value,
+        remarks: document.getElementById('orderRemarks').value
+    };
 
-            try {
-                const { data, error } = await supabase
-                    .from('orders')
-                    .insert([orderData]);
-                
-                if (error) throw error;
-                alert('Order added successfully!');
-                // Reset form or update UI
-            } catch (error) {
-                alert('Error adding order: ' + error.message);
-            }
-        });
+    try {
+        console.log('Attempting to insert order:', orderData); // Log the data being sent
+
+        const { data, error } = await supabase
+            .from('orders')
+            .insert([orderData]);
+        
+        if (error) {
+            console.error('Detailed Supabase Error:', error);
+            throw error;
+        }
+
+        console.log('Supabase Response:', data);
+        alert('Order added successfully!');
+        // Reset form
+        document.getElementById('orderForm').reset();
+    } catch (error) {
+        console.error('Full Error:', error);
+        alert('Error adding order: ' + error.message);
+    }
+});
 
         // Expense Form Submission
         document.getElementById('expenseForm').addEventListener('submit', async (e) => {
