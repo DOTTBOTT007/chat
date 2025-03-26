@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothing Business Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Clothing Business Manager</h1>
+        
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="mainTabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#orders" data-bs-toggle="tab">Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#expenses" data-bs-toggle="tab">Expenses</a>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content mt-3">
+            <!-- Dashboard Tab -->
+            <div class="tab-pane fade show active" id="dashboard">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Orders</h5>
+                                <p class="card-text" id="totalOrdersCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Revenue</h5>
+                                <p class="card-text" id="totalRevenueAmount">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Expenses</h5>
+                                <p class="card-text" id="totalExpensesAmount">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div class="tab-pane fade" id="orders">
+                <div class="card">
+                    <div class="card-header">Add New Order</div>
+                    <div class="card-body">
+                        <form id="orderForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select class="form-control" id="productCategory" required>
+                                        <option value="">Select Product Category</option>
+                                        <option value="Nightsuit">Nightsuit</option>
+                                        <option value="Shirt">Shirt</option>
+                                        <option value="Lehenga">Lehenga</option>
+                                        <option value="Kurti">Kurti</option>
+                                        <option value="Dress">Dress</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="productSku" required disabled>
+                                        <option value="">Select SKU (Select Category First)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select class="form-control" id="salesPlatform" required>
+                                        <option value="">Select Sales Platform</option>
+                                        <option value="Amazon">Amazon</option>
+                                        <option value="Flipkart">Flipkart</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="teamMember" required>
+                                        <option value="">Select Team Member</option>
+                                        <option value="Gaurang">Gaurang</option>
+                                        <option value="Sumit">Sumit</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="number" class="form-control" id="orderAmount" 
+                                           placeholder="Amount" step="0.01" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="number" class="form-control" id="orderUnits" 
+                                           placeholder="Units" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="date" class="form-control" id="orderDate" required>
+                                </div>
+                            </div>
+
+                            <textarea class="form-control" id="orderRemarks" 
+                                      placeholder="Additional Remarks (Optional)"></textarea>
+
+                            <button type="submit" class="btn btn-primary w-100">Add Order</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expenses Tab -->
+            <div class="tab-pane fade" id="expenses">
+                <div class="card">
+                    <div class="card-header">Add New Expense</div>
+                    <div class="card-body">
+                        <form id="expenseForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select class="form-control" id="expenseCategory" required>
+                                        <option value="">Select Expense Category</option>
+                                        <option value="Petrol">Petrol</option>
+                                        <option value="Bags">Bags</option>
+                                        <option value="Packaging">Packaging</option>
+                                        <option value="Travel">Travel</option>
+                                        <option value="Utilities">Utilities</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control" id="expenseAmount" 
+                                           placeholder="Amount" step="0.01" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" id="expenseDate" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="expenseTeamMember" required>
+                                        <option value="">Select Team Member</option>
+                                        <option value="Gaurang">Gaurang</option>
+                                        <option value="Sumit">Sumit</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <textarea class="form-control" id="expenseRemarks" 
+                                      placeholder="Additional Remarks (Optional)"></textarea>
+
+                            <button type="submit" class="btn btn-primary w-100">Add Expense</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap and Supabase Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Configuration and Main Script -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
