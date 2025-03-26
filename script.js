@@ -129,3 +129,133 @@ document.getElementById('expenseForm').addEventListener('submit', async (e) => {
 
 // Initialize dashboard on page load
 document.addEventListener('DOMContentLoaded', updateDashboardMetrics);
+
+// Function to create charts
+async function createCharts() {
+    try {
+        // Fetch orders data
+        const { data: ordersData, error: ordersError } = await supabase
+            .from('orders')
+            .select('*');
+
+        // Fetch expenses data
+        const { data: expensesData, error: expensesError } = await supabase
+            .from('expenses')
+            .select('*');
+
+        if (ordersError || expensesError) {
+            console.error('Error fetching data:', ordersError || expensesError);
+            return;
+        }
+
+        // Revenue by Platform Chart
+        const platformRevenue = ordersData.reduce((acc, order) => {
+            acc[order.platform] = (acc[order.platform] || 0) + order.amount;
+            return acc;
+        }, {});
+
+        new Chart(document.getElementById('platformRevenueChart'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(platformRevenue),
+                datasets: [{
+                    data: Object.values(platformRevenue),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)', 
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Revenue by Sales Platform'
+                    }
+                }
+            }
+        });
+
+        // Expenses by Category Chart
+        const expensesByCategory = expensesData.reduce((acc, expense) => {
+            acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
+            return acc;
+        }, {});
+
+        new Chart(document.getElementById('expensesCategoryChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(expensesByCategory),
+                datasets: [{
+                    label: 'Expenses',
+                    data: Object.values(expensesByCategory),
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Amount (₹)'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Expenses by Category'
+                    }
+                }
+            }
+        });
+
+        // Monthly Revenue Trend
+        const monthlyRevenue = ordersData.reduce((acc, order) => {
+            const month = new Date(order.order_date).toLocaleString('default', { month: 'short' });
+            acc[month] = (acc[month] || 0) + order.amount;
+            return acc;
+        }, {});
+
+        new Chart(document.getElementById('monthlyRevenueChart'), {
+            type: 'line',
+            data: {
+                labels: Object.keys(monthlyRevenue),
+                datasets: [{
+                    label: 'Monthly Revenue',
+                    data: Object.values(monthlyRevenue),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Revenue (₹)'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Monthly Revenue Trend'
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error creating charts:', error);
+    }
+}
+
+// Call create charts when DOM is loaded
+document.addEventListener('DOMContentLoaded', createCharts);
