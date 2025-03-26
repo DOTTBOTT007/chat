@@ -82,12 +82,12 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
         category: document.getElementById('productCategory').value,
         sku: document.getElementById('productSku').value,
         platform: document.getElementById('salesPlatform').value,
-        gender: document.getElementById('personCategory').value,
         team_member: document.getElementById('teamMember').value,
         amount: parseFloat(document.getElementById('orderAmount').value),
         units: parseInt(document.getElementById('orderUnits').value),
         order_date: document.getElementById('orderDate').value,
-        remarks: document.getElementById('orderRemarks').value
+        remarks: document.getElementById('orderRemarks').value,
+        gender: document.getElementById('personCategory').value
     };
 
     try {
