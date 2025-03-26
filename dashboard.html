@@ -9,6 +9,342 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            padding-top: 20px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .form-control, .btn {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Clothing Business Manager</h1>
+        
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="mainTabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#orders" data-bs-toggle="tab">Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#expenses" data-bs-toggle="tab">Expenses</a>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content mt-3">
+            <!-- Dashboard Tab -->
+            <div class="tab-pane fade show active" id="dashboard">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Orders</h5>
+                                <p class="card-text" id="totalOrdersCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Revenue</h5>
+                                <p class="card-text" id="totalRevenueAmount">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Expenses</h5>
+                                <p class="card-text" id="totalExpensesAmount">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div class="tab-pane fade" id="orders">
+                <div class="card">
+                    <div class="card-header">Add New Order</div>
+                    <div class="card-body">
+                        <form id="orderForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select class="form-control" id="productCategory" required>
+                                        <option value="">Select Product Category</option>
+                                        <option value="Nightsuit">Nightsuit</option>
+                                        <option value="Shirt">Shirt</option>
+                                        <option value="Lehenga">Lehenga</option>
+                                        <option value="Kurti">Kurti</option>
+                                        <option value="Dress">Dress</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="productSku" required disabled>
+                                        <option value="">Select SKU (Select Category First)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select class="form-control" id="salesPlatform" required>
+                                        <option value="">Select Sales Platform</option>
+                                        <option value="Amazon">Amazon</option>
+                                        <option value="Flipkart">Flipkart</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="teamMember" required>
+                                        <option value="">Select Team Member</option>
+                                        <option value="Gaurang">Gaurang</option>
+                                        <option value="Sumit">Sumit</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="number" class="form-control" id="orderAmount" 
+                                           placeholder="Amount" step="0.01" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="number" class="form-control" id="orderUnits" 
+                                           placeholder="Units" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="date" class="form-control" id="orderDate" required>
+                                </div>
+                            </div>
+
+                            <textarea class="form-control" id="orderRemarks" 
+                                      placeholder="Additional Remarks (Optional)"></textarea>
+
+                            <button type="submit" class="btn btn-primary w-100">Add Order</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expenses Tab -->
+            <div class="tab-pane fade" id="expenses">
+                <div class="card">
+                    <div class="card-header">Add New Expense</div>
+                    <div class="card-body">
+                        <form id="expenseForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select class="form-control" id="expenseCategory" required>
+                                        <option value="">Select Expense Category</option>
+                                        <option value="Petrol">Petrol</option>
+                                        <option value="Bags">Bags</option>
+                                        <option value="Packaging">Packaging</option>
+                                        <option value="Travel">Travel</option>
+                                        <option value="Utilities">Utilities</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control" id="expenseAmount" 
+                                           placeholder="Amount" step="0.01" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" id="expenseDate" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="expenseTeamMember" required>
+                                        <option value="">Select Team Member</option>
+                                        <option value="Gaurang">Gaurang</option>
+                                        <option value="Sumit">Sumit</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <textarea class="form-control" id="expenseRemarks" 
+                                      placeholder="Additional Remarks (Optional)"></textarea>
+
+                            <button type="submit" class="btn btn-primary w-100">Add Expense</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap and Supabase Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://jaykercqfzzwjivuzkpj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpheWtlcmNxZnp6d2ppdnV6a3BqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4NDUyMDgsImV4cCI6MjA1ODQyMTIwOH0.FEw7uHf0zia6NTW4Npy6JA1o3b8lrBbVc70CRLRBuA4';
+
+        // Initialize Supabase Client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // SKU Mappings
+        const SKU_MAPPINGS = {
+            'Nightsuit': [
+                'NS001 - Cotton Nightsuit',
+                'NS002 - Silk Nightsuit', 
+                'NS003 - Winter Nightsuit'
+            ],
+            'Shirt': [
+                'SH001 - Casual Shirt', 
+                'SH002 - Formal Shirt'
+            ],
+            'Lehenga': [
+                'LH001 - Traditional Lehenga', 
+                'LH002 - Wedding Lehenga'
+            ],
+            'Kurti': [
+                'KT001 - Cotton Kurti',
+                'KT002 - Silk Kurti'
+            ],
+            'Dress': [
+                'DR001 - Party Dress',
+                'DR002 - Casual Dress'
+            ]
+        };
+
+        // Dynamic SKU Population
+        document.getElementById('productCategory').addEventListener('change', function() {
+            const skuSelect = document.getElementById('productSku');
+            const category = this.value;
+            
+            skuSelect.innerHTML = '<option value="">Select SKU</option>';
+            
+            if (category && SKU_MAPPINGS[category]) {
+                SKU_MAPPINGS[category].forEach(sku => {
+                    const option = document.createElement('option');
+                    option.value = sku;
+                    option.textContent = sku;
+                    skuSelect.appendChild(option);
+                });
+                skuSelect.disabled = false;
+            } else {
+                skuSelect.disabled = true;
+            }
+        });
+
+        // Dashboard Metrics
+        async function updateDashboardMetrics() {
+            try {
+                // Fetch total orders count
+                const { count: ordersCount } = await supabase
+                    .from('orders')
+                    .select('*', { count: 'exact' });
+
+                // Fetch total revenue
+                const { data: revenueData } = await supabase
+                    .from('orders')
+                    .select('amount');
+
+                const totalRevenue = revenueData.reduce((sum, order) => sum + order.amount, 0);
+
+                // Fetch total expenses
+                const { data: expensesData } = await supabase
+                    .from('expenses')
+                    .select('amount');
+
+                const totalExpenses = expensesData.reduce((sum, expense) => sum + expense.amount, 0);
+
+                // Update dashboard
+                document.getElementById('totalOrdersCount').textContent = ordersCount || 0;
+                document.getElementById('totalRevenueAmount').textContent = `₹${totalRevenue.toFixed(2)}`;
+                document.getElementById('totalExpensesAmount').textContent = `₹${totalExpenses.toFixed(2)}`;
+            } catch (error) {
+                console.error('Error updating dashboard:', error);
+            }
+        }
+
+        // Order Form Submission
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const orderData = {
+                category: document.getElementById('productCategory').value,
+                sku: document.getElementById('productSku').value,
+                platform: document.getElementById('salesPlatform').value,
+                team_member: document.getElementById('teamMember').value,
+                amount: parseFloat(document.getElementById('orderAmount').value),
+                units: parseInt(document.getElementById('orderUnits').value),
+                order_date: document.getElementById('orderDate').value,
+                remarks: document.getElementById('orderRemarks').value
+            };
+
+            try {
+                const { error } = await supabase.from('orders').insert([orderData]);
+                
+                if (error) throw error;
+                
+                alert('Order added successfully!');
+                e.target.reset();
+                updateDashboardMetrics();
+            } catch (error) {
+                alert('Error adding order: ' + error.message);
+            }
+        });
+
+        // Expense Form Submission
+        document.getElementById('expenseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const expenseData = {
+                category: document.getElementById('expenseCategory').value,
+                amount: parseFloat(document.getElementById('expenseAmount').value),
+                expense_date: document.getElementById('expenseDate').value,
+                team_member: document.getElementById('expenseTeamMember').value,
+                remarks: document.getElementById('expenseRemarks').value
+            };
+
+            try {
+                const { error } = await supabase.from('expenses').insert([expenseData]);
+                
+                if (error) throw error;
+                
+                alert('Expense added successfully!');
+                e.target.reset();
+                updateDashboardMetrics();
+            } catch (error) {
+                alert('Error adding expense: ' + error.message);
+            }
+        });
+
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', updateDashboardMetrics);
+    </script>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothing Business Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
         }
@@ -258,3 +594,4 @@ const supabase = supabase.createClient(supabaseUrl, supabaseKey);
     </script>
 </body>
 </html>
+ -->
