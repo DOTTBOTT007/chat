@@ -3,260 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clothing Business Manager</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Order and Expense Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+        }
+        label, select, input, textarea {
+            display: block;
+            margin: 10px 0;
         }
         .container {
-            max-width: 100%;
-            padding: 15px;
-        }
-        .card {
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .form-control, .btn {
-            margin-bottom: 10px;
+            width: 80%;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center my-4">Clothing Business Manager</h1>
-        
-        <!-- Navigation -->
-        <ul class="nav nav-tabs" id="mainTabs">
-            <li class="nav-item">
-                <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#orders" data-bs-toggle="tab">Orders</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#expenses" data-bs-toggle="tab">Expenses</a>
-            </li>
-        </ul>
+        <h2>Order Form</h2>
+        <form id="orderForm">
+            <label for="category">Category:</label>
+            <select id="category" name="category">
+                <option value="nightsuit">Nightsuit</option>
+                <option value="shirt">Shirt</option>
+                <option value="lahenga">Lahenga</option>
+            </select>
 
-        <!-- Orders Tab -->
-        <div class="tab-content mt-3">
-            <div class="tab-pane fade" id="orders">
-                <div class="card">
-                    <div class="card-header">Add New Order</div>
-                    <div class="card-body">
-                        <form id="orderForm">
-                            <!-- Product Category Dropdown -->
-                            <select class="form-control" id="productCategory" required>
-                                <option value="">Select Product Category</option>
-                                <option value="Nightsuit">Nightsuit</option>
-                                <option value="Shirt">Shirt</option>
-                                <option value="Lehenga">Lehenga</option>
-                                <option value="Kurti">Kurti</option>
-                                <option value="Dress">Dress</option>
-                            </select>
+            <label for="sku">SKU:</label>
+            <select id="sku" name="sku"></select>
 
-                            <!-- SKU Dropdown (will be dynamically populated) -->
-                            <select class="form-control" id="productSku" required disabled>
-                                <option value="">Select SKU (Select Category First)</option>
-                            </select>
+            <label for="company">Company:</label>
+            <select id="company" name="company">
+                <option value="amazon">Amazon</option>
+                <option value="flipcart">Flipcart</option>
+            </select>
 
-                            <!-- Platform Dropdown -->
-                            <select class="form-control" id="salesPlatform" required>
-                                <option value="">Select Sales Platform</option>
-                                <option value="Amazon">Amazon</option>
-                                <option value="Flipkart">Flipkart</option>
-                            </select>
+            <label for="person">Person:</label>
+            <select id="person" name="person">
+                <option value="gaurang">Gaurang</option>
+                <option value="sumit">Sumit</option>
+            </select>
 
-                            <!-- Team Member Dropdown -->
-                            <select class="form-control" id="teamMember" required>
-                                <option value="">Select Team Member</option>
-                                <option value="Gaurang">Gaurang</option>
-                                <option value="Sumit">Sumit</option>
-                            </select>
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required>
 
-                            <!-- Amount Input -->
-                            <input type="number" class="form-control" id="orderAmount" 
-                                   placeholder="Amount" step="0.01" required>
+            <label for="remarks">Remarks:</label>
+            <textarea id="remarks" name="remarks"></textarea>
 
-                            <!-- Units Input -->
-                            <input type="number" class="form-control" id="orderUnits" 
-                                   placeholder="Units" required>
+            <label for="unit">Unit:</label>
+            <input type="text" id="unit" name="unit" required>
 
-                            <!-- Order Date -->
-                            <input type="date" class="form-control" id="orderDate" required>
+            <label for="orderDate">Order Date:</label>
+            <input type="date" id="orderDate" name="orderDate" required>
 
-                            <!-- Remarks -->
-                            <textarea class="form-control" id="orderRemarks" 
-                                      placeholder="Additional Remarks (Optional)"></textarea>
+            <button type="submit">Submit Order</button>
+        </form>
 
-                            <button type="submit" class="btn btn-primary">Add Order</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <h2>Expense Form</h2>
+        <form id="expenseForm">
+            <label for="expenseCategory">Expense Category:</label>
+            <select id="expenseCategory" name="expenseCategory">
+                <option value="petrol">Petrol</option>
+                <option value="tap">Tap</option>
+                <option value="bags">Bags</option>
+            </select>
 
-            <!-- Expenses Tab -->
-            <div class="tab-pane fade" id="expenses">
-                <div class="card">
-                    <div class="card-header">Add New Expense</div>
-                    <div class="card-body">
-                        <form id="expenseForm">
-                            <!-- Expense Category Dropdown -->
-                            <select class="form-control" id="expenseCategory" required>
-                                <option value="">Select Expense Category</option>
-                                <option value="Petrol">Petrol</option>
-                                <option value="Bags">Bags</option>
-                                <option value="Packaging">Packaging</option>
-                                <option value="Travel">Travel</option>
-                                <option value="Utilities">Utilities</option>
-                            </select>
+            <label for="expenseAmount">Amount:</label>
+            <input type="number" id="expenseAmount" name="expenseAmount" required>
 
-                            <!-- Amount Input -->
-                            <input type="number" class="form-control" id="expenseAmount" 
-                                   placeholder="Amount" step="0.01" required>
+            <label for="expenseDate">Date:</label>
+            <input type="date" id="expenseDate" name="expenseDate" required>
 
-                            <!-- Expense Date -->
-                            <input type="date" class="form-control" id="expenseDate" required>
+            <label for="expensePerson">Person:</label>
+            <select id="expensePerson" name="expensePerson">
+                <option value="gaurang">Gaurang</option>
+                <option value="sumit">Sumit</option>
+            </select>
 
-                            <!-- Team Member Dropdown -->
-                            <select class="form-control" id="expenseTeamMember" required>
-                                <option value="">Select Team Member</option>
-                                <option value="Gaurang">Gaurang</option>
-                                <option value="Sumit">Sumit</option>
-                            </select>
-
-                            <!-- Remarks -->
-                            <textarea class="form-control" id="expenseRemarks" 
-                                      placeholder="Additional Remarks (Optional)"></textarea>
-
-                            <button type="submit" class="btn btn-primary">Add Expense</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <button type="submit">Submit Expense</button>
+        </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase Configuration
-        const supabaseUrl = 'https://jaykercqfzzwjivuzkpj.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpheWtlcmNxZnp6d2ppdnV6a3BqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4NDUyMDgsImV4cCI6MjA1ODQyMTIwOH0.FEw7uHf0zia6NTW4Npy6JA1o3b8lrBbVc70CRLRBuA4';
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        const categorySelect = document.getElementById("category");
+        const skuSelect = document.getElementById("sku");
 
-        // SKU Mappings
-        const skuMappings = {
-            'Nightsuit': [
-                'NS001 - Cotton Nightsuit',
-                'NS002 - Silk Nightsuit', 
-                'NS003 - Winter Nightsuit'
-            ],
-            'Shirt': [
-                'SH001 - Casual Shirt', 
-                'SH002 - Formal Shirt'
-            ],
-            'Lehenga': [
-                'LH001 - Traditional Lehenga', 
-                'LH002 - Wedding Lehenga'
-            ],
-            'Kurti': [
-                'KT001 - Cotton Kurti',
-                'KT002 - Silk Kurti'
-            ],
-            'Dress': [
-                'DR001 - Party Dress',
-                'DR002 - Casual Dress'
-            ]
+        const skuOptions = {
+            nightsuit: ["SKU1", "SKU2", "SKU3"],
+            shirt: ["SKU4", "SKU5"],
+            lahenga: ["SKU6", "SKU7", "SKU8"]
         };
 
-        // Dynamic SKU Population
-        document.getElementById('productCategory').addEventListener('change', function() {
-            const skuSelect = document.getElementById('productSku');
-            const category = this.value;
-            
-            // Reset SKU dropdown
-            skuSelect.innerHTML = '<option value="">Select SKU</option>';
-            
-            // Populate SKUs based on selected category
-            if (category && skuMappings[category]) {
-                skuMappings[category].forEach(sku => {
-                    const option = document.createElement('option');
-                    option.value = sku;
-                    option.textContent = sku;
-                    skuSelect.appendChild(option);
-                });
-                skuSelect.disabled = false;
-            } else {
-                skuSelect.disabled = true;
-            }
+        categorySelect.addEventListener("change", function () {
+            const selectedCategory = this.value;
+            const skus = skuOptions[selectedCategory] || [];
+            skuSelect.innerHTML = ""; // Clear previous options
+
+            skus.forEach(sku => {
+                const option = document.createElement("option");
+                option.value = sku;
+                option.textContent = sku;
+                skuSelect.appendChild(option);
+            });
         });
 
-        // Order Form Submission
-       document.getElementById('orderForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const orderData = {
-        category: document.getElementById('productCategory').value,
-        sku: document.getElementById('productSku').value,
-        platform: document.getElementById('salesPlatform').value,
-        team_member: document.getElementById('teamMember').value,
-        amount: parseFloat(document.getElementById('orderAmount').value),
-        units: parseInt(document.getElementById('orderUnits').value),
-        order_date: document.getElementById('orderDate').value,
-        remarks: document.getElementById('orderRemarks').value
-    };
-
-    try {
-        console.log('Attempting to insert order:', orderData); // Log the data being sent
-
-        const { data, error } = await supabase
-            .from('orders')
-            .insert([orderData]);
-        
-        if (error) {
-            console.error('Detailed Supabase Error:', error);
-            throw error;
-        }
-
-        console.log('Supabase Response:', data);
-        alert('Order added successfully!');
-        // Reset form
-        document.getElementById('orderForm').reset();
-    } catch (error) {
-        console.error('Full Error:', error);
-        alert('Error adding order: ' + error.message);
-    }
-});
-
-        // Expense Form Submission
-        document.getElementById('expenseForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const expenseData = {
-                category: document.getElementById('expenseCategory').value,
-                amount: parseFloat(document.getElementById('expenseAmount').value),
-                expense_date: document.getElementById('expenseDate').value,
-                team_member: document.getElementById('expenseTeamMember').value,
-                remarks: document.getElementById('expenseRemarks').value
-            };
-
-            try {
-                const { data, error } = await supabase
-                    .from('expenses')
-                    .insert([expenseData]);
-                
-                if (error) throw error;
-                alert('Expense added successfully!');
-                // Reset form or update UI
-            } catch (error) {
-                alert('Error adding expense: ' + error.message);
-            }
-        });
+        // Initialize with the default category
+        categorySelect.dispatchEvent(new Event("change"));
     </script>
 </body>
 </html>
