@@ -83,11 +83,12 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
         sku: document.getElementById('productSku').value,
         platform: document.getElementById('salesPlatform').value,
         team_member: document.getElementById('teamMember').value,
-        amount: parseFloat(document.getElementById('orderAmount').value),
         units: parseInt(document.getElementById('orderUnits').value),
         order_date: document.getElementById('orderDate').value,
         remarks: document.getElementById('orderRemarks').value,
-        gender: document.getElementById('personCategory').value
+        gender: document.getElementById('personCategory').value,
+        sellingprice: parseFloat(document.getElementById('sellingprice').value),
+        buyingprice: parseFloat(document.getElementById('buyingprice').value),
     };
 
     try {
