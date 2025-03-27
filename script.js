@@ -11,7 +11,10 @@ const SKU_MAPPINGS = {
 document.getElementById('productCategory').addEventListener('change', function() { 
     const skuSelect = document.getElementById('productSku'); 
     const category = this.value; 
+    
+    // Reset SKU select
     skuSelect.innerHTML = '<option value="">Select SKU</option>'; 
+    
     if (category && SKU_MAPPINGS[category]) { 
         SKU_MAPPINGS[category].forEach(sku => { 
             const option = document.createElement('option'); 
@@ -25,7 +28,7 @@ document.getElementById('productCategory').addEventListener('change', function()
     } 
 });
 
-// Advanced Dashboard Metrics
+// Dashboard Metrics
 async function updateDashboardMetrics() { 
     try { 
         // Fetch total orders count 
@@ -47,88 +50,113 @@ async function updateDashboardMetrics() {
         
         const totalExpenses = expensesData.reduce((sum, expense) => sum + expense.amount, 0); 
 
-        // Profit Calculation
+        // Calculate profit
         const totalProfit = totalRevenue - totalExpenses;
 
-        // Update dashboard with animations
-        animateNumberChange('totalOrdersCount', ordersCount || 0);
-        animateNumberChange('totalRevenueAmount', totalRevenue, '₹');
-        animateNumberChange('totalExpensesAmount', totalExpenses, '₹');
-        animateNumberChange('totalProfitAmount', totalProfit, '₹');
-
+        // Update dashboard elements
+        document.getElementById('totalOrdersCount').textContent = ordersCount || 0; 
+        document.getElementById('totalRevenueAmount').textContent = `₹${totalRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; 
+        document.getElementById('totalExpensesAmount').textContent = `₹${totalExpenses.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; 
+        document.getElementById('totalProfitAmount').textContent = `₹${totalProfit.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; 
     } catch (error) { 
         console.error('Error updating dashboard:', error); 
+        alert('Failed to update dashboard metrics: ' + error.message); 
     } 
 }
 
-// Number Animation Function
-function animateNumberChange(elementId, finalValue, prefix = '') {
-    const element = document.getElementById(elementId);
-    const duration = 1500; // Animation duration in ms
-    const startValue = parseInt(element.textContent.replace(/[^0-9.-]+/g,'')) || 0;
+// Order Form Submission
+document.getElementById('orderForm').addEventListener('submit', async (e) => { 
+    e.preventDefault(); 
     
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        const currentValue = Math.floor(progress * (finalValue - startValue) + startValue);
-        
-        element.textContent = `${prefix}${currentValue.toLocaleString()}`;
-        
-        if (progress < 1) {
-            window.requestAnimationFrame(step);
-        } else {
-            element.textContent = `${prefix}${finalValue.toLocaleString()}`;
-        }
-    };
+    const orderData = { 
+        category: document.getElementById('productCategory').value, 
+        sku: document.getElementById('productSku').value, 
+        platform: document.getElementById('salesPlatform').value, 
+        team_member: document.getElementById('teamMember').value, 
+        units: parseInt(document.getElementById('orderUnits').value), 
+        order_date: document.getElementById('orderDate').value, 
+        remarks: document.getElementById('orderRemarks').value, 
+        gender: document.getElementById('personCategory').value, 
+        sellingprice: parseFloat(document.getElementById('sellingprice').value), 
+        buyingprice: parseFloat(document.getElementById('buyingprice').value), 
+    }; 
     
-    window.requestAnimationFrame(step);
-}
-
-// Order Form Submission (existing code remains the same)
-// ... (keep the existing orderForm submission code)
-
-// Expenses Form Submission (existing code remains the same)
-// ... (keep the existing expenseForm submission code)
-
-// Enhanced Chart Creation Function
-async function createCharts() { 
     try { 
-        // Fetch orders and expenses data 
+        const { error } = await supabase.from('orders').insert([orderData]); 
+        
+        if (error) throw error; 
+        
+        alert('Order added successfully!'); 
+        e.target.reset(); 
+        updateDashboardMetrics(); 
+        createCharts(); 
+    } catch (error) { 
+        alert('Error adding order: ' + error.message); 
+        console.error('Order submission error:', error); 
+    } 
+});
+
+// Expense Form Submission
+document.getElementById('expenseForm').addEventListener('submit', async (e) => { 
+    e.preventDefault(); 
+    
+    const expenseData = { 
+        category: document.getElementById('expenseCategory').value, 
+        amount: parseFloat(document.getElementById('expenseAmount').value), 
+        expense_date: document.getElementById('expenseDate').value, 
+        team_member: document.getElementById('expenseTeamMember').value, 
+        remarks: document.getElementById('expenseRemarks').value 
+    }; 
+    
+    try { 
+        const { error } = await supabase.from('expenses').insert([expenseData]); 
+        
+        if (error) throw error; 
+        
+        alert('Expense added successfully!'); 
+        e.target.reset(); 
+        updateDashboardMetrics(); 
+        createCharts(); 
+    } catch (error) { 
+        alert('Error adding expense: ' + error.message); 
+        console.error('Expense submission error:', error); 
+    } 
+});
+
+// Function to create charts
+async function createCharts() { 
+    // Ensure Chart.js is loaded
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js is not loaded');
+        return;
+    }
+
+    try { 
+        // Fetch orders data 
         const { data: ordersData, error: ordersError } = await supabase 
             .from('orders') 
             .select('*'); 
 
+        // Fetch expenses data 
         const { data: expensesData, error: expensesError } = await supabase 
             .from('expenses') 
             .select('*'); 
 
-        if (ordersError) { 
-            console.error('Error fetching orders:', ordersError); 
-            return; 
-        } 
-
-        if (expensesError) { 
-            console.error('Error fetching expenses:', expensesError); 
+        if (ordersError || expensesError) { 
+            console.error('Error fetching data:', ordersError || expensesError); 
             return; 
         } 
 
         // Revenue by Platform Chart 
         const platformRevenue = ordersData.reduce((acc, order) => { 
-            // Use the actual column name for platform from your database
-            acc[order.salesplatform] = (acc[order.salesplatform] || 0) + order.sellingprice; 
+            acc[order.platform] = (acc[order.platform] || 0) + order.sellingprice; 
             return acc; 
         }, {}); 
 
-        // Check if Chart is defined
-        if (typeof Chart === 'undefined') {
-            console.error('Chart.js is not loaded');
-            return;
-        }
-
-        // Revenue by Platform Chart 
+        // Destroy existing chart if it exists
+        Chart.getChart('platformRevenueChart')?.destroy();
         new Chart(document.getElementById('platformRevenueChart'), { 
-            type: 'doughnut', 
+            type: 'pie', 
             data: { 
                 labels: Object.keys(platformRevenue), 
                 datasets: [{ 
@@ -137,8 +165,7 @@ async function createCharts() {
                         'rgba(255, 99, 132, 0.7)', 
                         'rgba(54, 162, 235, 0.7)', 
                         'rgba(255, 206, 86, 0.7)' 
-                    ],
-                    borderWidth: 1
+                    ] 
                 }] 
             }, 
             options: { 
@@ -147,21 +174,19 @@ async function createCharts() {
                     title: { 
                         display: true, 
                         text: 'Revenue by Sales Platform' 
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
+                    } 
                 } 
             } 
         }); 
 
         // Expenses by Category Chart 
         const expensesByCategory = expensesData.reduce((acc, expense) => { 
-            // Use the actual column name for category from your database
-            acc[expense.expensecategory] = (acc[expense.expensecategory] || 0) + expense.expenseamount; 
+            acc[expense.category] = (acc[expense.category] || 0) + expense.amount; 
             return acc; 
         }, {}); 
 
+        // Destroy existing chart if it exists
+        Chart.getChart('expensesCategoryChart')?.destroy();
         new Chart(document.getElementById('expensesCategoryChart'), { 
             type: 'bar', 
             data: { 
@@ -169,9 +194,7 @@ async function createCharts() {
                 datasets: [{ 
                     label: 'Expenses', 
                     data: Object.values(expensesByCategory), 
-                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)' 
                 }] 
             }, 
             options: { 
@@ -189,22 +212,20 @@ async function createCharts() {
                     title: { 
                         display: true, 
                         text: 'Expenses by Category' 
-                    },
-                    legend: {
-                        display: false
-                    }
+                    } 
                 } 
             } 
         }); 
 
         // Monthly Revenue Trend 
         const monthlyRevenue = ordersData.reduce((acc, order) => { 
-            // Ensure you're using the correct date column name
-            const month = new Date(order.orderdate).toLocaleString('default', { month: 'short' }); 
+            const month = new Date(order.order_date).toLocaleString('default', { month: 'short' }); 
             acc[month] = (acc[month] || 0) + order.sellingprice; 
             return acc; 
         }, {}); 
 
+        // Destroy existing chart if it exists
+        Chart.getChart('monthlyRevenueChart')?.destroy();
         new Chart(document.getElementById('monthlyRevenueChart'), { 
             type: 'line', 
             data: { 
@@ -239,9 +260,11 @@ async function createCharts() {
 
     } catch (error) { 
         console.error('Error creating charts:', error); 
+        alert('Failed to create charts: ' + error.message); 
     } 
-} 
-// Call dashboard metrics and create charts when DOM is loaded 
+}
+
+// Initialize dashboard and charts on page load
 document.addEventListener('DOMContentLoaded', () => {
     updateDashboardMetrics();
     createCharts();
