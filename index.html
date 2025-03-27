@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +10,7 @@
     <link href="styles.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <h1 class="text-center mb-4">Clothing Business Manager</h1>
         
         <!-- Navigation Tabs -->
@@ -64,7 +65,7 @@
                     </div>
                 </div>
 
-                <!-- Additional Cards and Charts -->
+                <!-- Charts Row -->
                 <div class="row mt-4">
                     <div class="col-md-4">
                         <div class="card">
@@ -92,150 +93,272 @@
 
             <!-- Orders Tab -->
             <div class="tab-pane fade" id="orders">
-                <div class="card">
-                    <div class="card-header">Add New Order</div>
-                    <div class="card-body">
-                        <form id="orderForm">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <select class="form-control" id="productCategory" required>
-                                        <option value="">Select Product Category</option>
-                                        <option value="Nightsuit">Nightsuit</option>
-                                        <option value="Shirt">Shirt</option>
-                                        <option value="Lehenga">Lehenga</option>
-                                        <option value="Kurti">Kurti</option>
-                                        <option value="Dress">Dress</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <select class="form-control" id="productSku" required disabled>
-                                        <option value="">Select SKU (Select Category First)</option>
-                                    </select>
-                                </div>
+                <div class="row">
+                    <!-- Order Form Column -->
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header">Add New Order</div>
+                            <div class="card-body">
+                                <form id="orderForm">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-2">
+                                            <select class="form-control" id="productCategory" required>
+                                                <option value="">Select Product Category</option>
+                                                <option value="Nightsuit">Nightsuit</option>
+                                                <option value="Shirt">Shirt</option>
+                                                <option value="Lehenga">Lehenga</option>
+                                                <option value="Kurti">Kurti</option>
+                                                <option value="Dress">Dress</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <select class="form-control" id="productSku" required disabled>
+                                                <option value="">Select SKU (Select Category First)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <select class="form-control" id="personCategory" required>
+                                                <option value="">Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Children">Children</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <select class="form-control" id="salesPlatform" required>
+                                                <option value="">Select Sales Platform</option>
+                                                <option value="Amazon">Amazon</option>
+                                                <option value="Flipkart">Flipkart</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <select class="form-control" id="teamMember" required>
+                                                <option value="">Select Team Member</option>
+                                                <option value="Gaurang">Gaurang</option>
+                                                <option value="Sumit">Sumit</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <input type="number" class="form-control" id="buyingprice" 
+                                                   placeholder="Buying Price" step="0.01" required>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <input type="number" class="form-control" id="sellingprice" 
+                                                   placeholder="Selling Price" step="0.01" required>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <select class="form-control" id="gst" required>
+                                                <option value="">Select GST</option>
+                                                <option value="Gaurang">Gaurang</option>
+                                                <option value="Sumit">Sumit</option>
+                                                <option value="Audhesh">Audhesh</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <input type="number" class="form-control" id="orderUnits" 
+                                                   placeholder="Units" required>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <input type="date" class="form-control" id="orderDate" required>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <textarea class="form-control" id="orderRemarks" 
+                                                      placeholder="Additional Remarks (Optional)"></textarea>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Add Order</button>
+                                </form>
                             </div>
-                            
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <select class="form-control" id="personCategory" required>
-                                        <option value="">Select Gender</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Children">Children</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="form-control" id="salesPlatform" required>
-                                        <option value="">Select Sales Platform</option>
-                                        <option value="Amazon">Amazon</option>
-                                        <option value="Flipkart">Flipkart</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="form-control" id="teamMember" required>
-                                        <option value="">Select Team Member</option>
-                                        <option value="Gaurang">Gaurang</option>
-                                        <option value="Sumit">Sumit</option>
-                                    </select>
-                                </div>
-                            </div>
-                             <div class="row">
-                                <div class="col-md-4">
-                                    <input type="number" class="form-control" id="buyingprice" 
-                                           placeholder="BuyingPrice" step="0.01" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="number" class="form-control" id="sellingprice" 
-                                           placeholder="SellingPrice" step="0.01" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="form-control" id="gst" required>
-                                        <option value="">Select GST</option>
-                                        <option value="Gaurang">Gaurang</option>
-                                        <option value="Sumit">Sumit</option>
-                                         <option value="Audhesh">Audhesh</option>
-                                    </select>
-                                </div>
-                                 </div>
-                                 
-                            <div class="row">
-                               
-                                <div class="col-md-6">
-                                    <input type="number" class="form-control" id="orderUnits" 
-                                           placeholder="Units" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="date" class="form-control" id="orderDate" required>
-                                </div>
-                            </div>
+                        </div>
+                    </div>
 
-                            <textarea class="form-control" id="orderRemarks" 
-                                      placeholder="Additional Remarks (Optional)"></textarea>
-
-                            <button type="submit" class="btn btn-primary w-100">Add Order</button>
-                        </form>
+                    <!-- Orders Table Column -->
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">Orders List</div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Category</th>
+                                                <th>SKU</th>
+                                                <th>Platform</th>
+                                                <th>Gender</th>
+                                                <th>Units</th>
+                                                <th>Buying Price</th>
+                                                <th>Selling Price</th>
+                                                <th>Order Date</th>
+                                                <th>Team Member</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="ordersTableBody">
+                                            <!-- Dynamically populated orders will go here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Expenses Tab -->
             <div class="tab-pane fade" id="expenses">
-                <div class="card">
-                    <div class="card-header">Add New Expense</div>
-                    <div class="card-body">
-                        <form id="expenseForm">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <select class="form-control" id="expenseCategory" required>
-                                        <option value="">Select Expense Category</option>
-                                        <option value="Petrol">Petrol</option>
-                                        <option value="Bags">Bags</option>
-                                        <option value="Packaging">Packaging</option>
-                                        <option value="Travel">Travel</option>
-                                        <option value="Utilities">Utilities</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="number" class="form-control" id="expenseAmount" 
-                                           placeholder="Amount" step="0.01" required>
+                <div class="row">
+                    <!-- Expense Form Column -->
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header">Add New Expense</div>
+                            <div class="card-body">
+                                <form id="expenseForm">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-2">
+                                            <select class="form-control" id="expenseCategory" required>
+                                                <option value="">Select Expense Category</option>
+                                                <option value="Petrol">Petrol</option>
+                                                <option value="Bags">Bags</option>
+                                                <option value="Packaging">Packaging</option>
+                                                <option value="Travel">Travel</option>
+                                                <option value="Utilities">Utilities</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <input type="number" class="form-control" id="expenseAmount" 
+                                                   placeholder="Amount" step="0.01" required>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <input type="date" class="form-control" id="expenseDate" required>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <select class="form-control" id="expenseTeamMember" required>
+                                                <option value="">Select Team Member</option>
+                                                <option value="Gaurang">Gaurang</option>
+                                                <option value="Sumit">Sumit</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <textarea class="form-control" id="expenseRemarks" 
+                                                      placeholder="Additional Remarks (Optional)"></textarea>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Add Expense</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expenses Table Column -->
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">Expenses List</div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Category</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                                <th>Team Member</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="expensesTableBody">
+                                            <!-- Dynamically populated expenses will go here -->
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <input type="date" class="form-control" id="expenseDate" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <select class="form-control" id="expenseTeamMember" required>
-                                        <option value="">Select Team Member</option>
-                                        <option value="Gaurang">Gaurang</option>
-                                        <option value="Sumit">Sumit</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <textarea class="form-control" id="expenseRemarks" 
-                                      placeholder="Additional Remarks (Optional)"></textarea>
-
-                            <button type="submit" class="btn btn-primary w-100">Add Expense</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        
-    
-           
-
-
         </div>
     </div>
+
+    <!-- External Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-
-  
-    
-    <!-- Configuration and Main Script -->
-     <script src="config.js"></script>
+    <!-- Application Scripts -->
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+```
+
+Key changes in this updated HTML:
+
+1. Added responsive tables in both Orders and Expenses tabs
+2. Restructured the layout to have a form and table side by side
+3. Used Bootstrap's responsive classes for better mobile view
+4. Added `id="ordersTableBody"` and `id="expensesTableBody"` for dynamic population
+5. Improved form layouts with consistent spacing
+6. Made the design more compact and user-friendly
+
+Recommended accompanying CSS (styles.css):
+
+<antArtifact identifier="styles-css" type="application/vnd.ant.code" language="css" title="Responsive Styles for Clothing Business Manager">
+```css
+body {
+    background-color: #f4f6f9;
+}
+
+.container-fluid {
+    padding: 20px;
+}
+
+.metric-card {
+    border-left: 5px solid;
+    transition: transform 0.3s;
+}
+
+.metric-card:hover {
+    transform: scale(1.05);
+}
+
+.metric-card-orders {
+    border-left-color: #007bff;
+}
+
+.metric-card-revenue {
+    border-left-color: #28a745;
+}
+
+.metric-card-expenses {
+    border-left-color: #dc3545;
+}
+
+.table-responsive {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #f8f9fa;
+    border-color: #dee2e6 #dee2e6 #f8f9fa;
+}
+
+form .form-control {
+    margin-bottom: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+}
+```
+
+This updated design provides:
+- A clean, modern interface
+- Responsive layout
+- Easy-to-use forms
+- Comprehensive tables for orders and expenses
+- Hover effects on metric cards
+- Mobile-friendly design
+
+Make sure to replace your existing HTML and add/update the CSS file accordingly.
