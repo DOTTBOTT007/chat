@@ -54,7 +54,7 @@ async function updateDashboardMetrics() {
         // Fetch total revenue
         const { data: revenueData } = await supabase
             .from('orders')
-            .select('amount');
+            .select('sellingprice');
 
         const totalRevenue = revenueData.reduce((sum, order) => sum + order.amount, 0);
 
@@ -152,7 +152,7 @@ async function createCharts() {
 
         // Revenue by Platform Chart
         const platformRevenue = ordersData.reduce((acc, order) => {
-            acc[order.platform] = (acc[order.platform] || 0) + order.amount;
+            acc[order.platform] = (acc[order.platform] || 0) + order.sellingprice;
             return acc;
         }, {});
 
@@ -219,7 +219,7 @@ async function createCharts() {
         // Monthly Revenue Trend
         const monthlyRevenue = ordersData.reduce((acc, order) => {
             const month = new Date(order.order_date).toLocaleString('default', { month: 'short' });
-            acc[month] = (acc[month] || 0) + order.amount;
+            acc[month] = (acc[month] || 0) + order.sellingprice;
             return acc;
         }, {});
 
