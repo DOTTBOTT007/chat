@@ -103,17 +103,30 @@ async function createCharts() {
             .from('expenses') 
             .select('*'); 
 
-        if (ordersError || expensesError) { 
-            console.error('Error fetching data:', ordersError || expensesError); 
+        if (ordersError) { 
+            console.error('Error fetching orders:', ordersError); 
+            return; 
+        } 
+
+        if (expensesError) { 
+            console.error('Error fetching expenses:', expensesError); 
             return; 
         } 
 
         // Revenue by Platform Chart 
         const platformRevenue = ordersData.reduce((acc, order) => { 
-            acc[order.platform] = (acc[order.platform] || 0) + order.sellingprice; 
+            // Use the actual column name for platform from your database
+            acc[order.salesplatform] = (acc[order.salesplatform] || 0) + order.sellingprice; 
             return acc; 
         }, {}); 
 
+        // Check if Chart is defined
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js is not loaded');
+            return;
+        }
+
+        // Revenue by Platform Chart 
         new Chart(document.getElementById('platformRevenueChart'), { 
             type: 'doughnut', 
             data: { 
@@ -144,7 +157,8 @@ async function createCharts() {
 
         // Expenses by Category Chart 
         const expensesByCategory = expensesData.reduce((acc, expense) => { 
-            acc[expense.category] = (acc[expense.category] || 0) + expense.amount; 
+            // Use the actual column name for category from your database
+            acc[expense.expensecategory] = (acc[expense.expensecategory] || 0) + expense.expenseamount; 
             return acc; 
         }, {}); 
 
@@ -185,7 +199,8 @@ async function createCharts() {
 
         // Monthly Revenue Trend 
         const monthlyRevenue = ordersData.reduce((acc, order) => { 
-            const month = new Date(order.order_date).toLocaleString('default', { month: 'short' }); 
+            // Ensure you're using the correct date column name
+            const month = new Date(order.orderdate).toLocaleString('default', { month: 'short' }); 
             acc[month] = (acc[month] || 0) + order.sellingprice; 
             return acc; 
         }, {}); 
@@ -226,7 +241,6 @@ async function createCharts() {
         console.error('Error creating charts:', error); 
     } 
 } 
-
 // Call dashboard metrics and create charts when DOM is loaded 
 document.addEventListener('DOMContentLoaded', () => {
     updateDashboardMetrics();
