@@ -1,156 +1,33 @@
-// SKU Mappings
-const SKU_MAPPINGS = {
-    'Nightsuit': [
-        'NS001 - Cotton Nightsuit',
-        'NS002 - Silk Nightsuit', 
-        'NS003 - Winter Nightsuit'
-    ],
-    'Shirt': [
-        'SH001 - Casual Shirt', 
-        'SH002 - Formal Shirt'
-    ],
-    'Lehenga': [
-        'LH001 - Traditional Lehenga', 
-        'LH002 - Wedding Lehenga'
-    ],
-    'Kurti': [
-        'KT001 - Cotton Kurti',
-        'KT002 - Silk Kurti'
-    ],
-    'Dress': [
-        'DR001 - Party Dress',
-        'DR002 - Casual Dress'
-    ]
-};
-
-// Dynamic SKU Population
-document.getElementById('productCategory').addEventListener('change', function() {
-    const skuSelect = document.getElementById('productSku');
-    const category = this.value;
-    
-    skuSelect.innerHTML = '<option value="">Select SKU</option>';
-    
-    if (category && SKU_MAPPINGS[category]) {
-        SKU_MAPPINGS[category].forEach(sku => {
-            const option = document.createElement('option');
-            option.value = sku;
-            option.textContent = sku;
-            skuSelect.appendChild(option);
-        });
-        skuSelect.disabled = false;
-    } else {
-        skuSelect.disabled = true;
-    }
-});
-
-// Dashboard Metrics
-async function updateDashboardMetrics() {
-    try {
-        // Fetch total orders count
-        const { count: ordersCount } = await supabase
-            .from('orders')
-            .select('*', { count: 'exact' });
-
-        // Fetch total revenue
-        const { data: revenueData } = await supabase
-            .from('orders')
-            .select('sellingprice');
-
-        const totalRevenue = revenueData.reduce((sum, order) => sum + order.amount, 0);
-
-        // Fetch total expenses
-        const { data: expensesData } = await supabase
-            .from('expenses')
-            .select('amount');
-
-        const totalExpenses = expensesData.reduce((sum, expense) => sum + expense.amount, 0);
-
-        // Update dashboard
-        document.getElementById('totalOrdersCount').textContent = ordersCount || 0;
-        document.getElementById('totalRevenueAmount').textContent = `₹${totalRevenue.toFixed(2)}`;
-        document.getElementById('totalExpensesAmount').textContent = `₹${totalExpenses.toFixed(2)}`;
-    } catch (error) {
-        console.error('Error updating dashboard:', error);
-    }
-}
-
-// Order Form Submission
-document.getElementById('orderForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const orderData = {
-        category: document.getElementById('productCategory').value,
-        sku: document.getElementById('productSku').value,
-        platform: document.getElementById('salesPlatform').value,
-        team_member: document.getElementById('teamMember').value,
-        units: parseInt(document.getElementById('orderUnits').value),
-        order_date: document.getElementById('orderDate').value,
-        remarks: document.getElementById('orderRemarks').value,
-        gender: document.getElementById('personCategory').value,
-        sellingprice: parseFloat(document.getElementById('sellingprice').value),
-        buyingprice: parseFloat(document.getElementById('buyingprice').value),
-    };
-
-    try {
-        const { error } = await supabase.from('orders').insert([orderData]);
-        
-        if (error) throw error;
-        
-        alert('Order added successfully!');
-        e.target.reset();
-        updateDashboardMetrics();
-    } catch (error) {
-        alert('Error adding order: ' + error.message);
-    }
-});
-
-// Expense Form Submission
-document.getElementById('expenseForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const expenseData = {
-        category: document.getElementById('expenseCategory').value,
-        amount: parseFloat(document.getElementById('expenseAmount').value),
-        expense_date: document.getElementById('expenseDate').value,
-        team_member: document.getElementById('expenseTeamMember').value,
-        remarks: document.getElementById('expenseRemarks').value
-    };
-
-    try {
-        const { error } = await supabase.from('expenses').insert([expenseData]);
-        
-        if (error) throw error;
-        
-        alert('Expense added successfully!');
-        e.target.reset();
-        updateDashboardMetrics();
-    } catch (error) {
-        alert('Error adding expense: ' + error.message);
-    }
-});
-
-// Initialize dashboard on page load
-document.addEventListener('DOMContentLoaded', updateDashboardMetrics);
-
-// Function to create charts
+// Function to create charts with improved error handling and flexibility
 async function createCharts() {
     try {
-        // Fetch orders data
+        // Fetch orders data with error handling
         const { data: ordersData, error: ordersError } = await supabase
             .from('orders')
-            .select('*');
+            .select('*')
+            .throwOnError();
 
-        // Fetch expenses data
+        // Fetch expenses data with error handling
         const { data: expensesData, error: expensesError } = await supabase
             .from('expenses')
-            .select('*');
+            .select('*')
+            .throwOnError();
 
-        if (ordersError || expensesError) {
-            console.error('Error fetching data:', ordersError || expensesError);
+        // Ensure we have data before proceeding
+        if (!ordersData || !expensesData) {
+            console.error('No data available for charts');
             return;
         }
 
-        // Revenue by Platform Chart
+        // Color palette for consistent design
+        const COLOR_PALETTE = {
+            primary: 'rgba(54, 162, 235, 0.7)',
+            secondary: 'rgba(255, 99, 132, 0.7)',
+            tertiary: 'rgba(75, 192, 192, 0.7)',
+            accent: 'rgba(255, 206, 86, 0.7)'
+        };
+
+        // Revenue by Platform Chart with more interactive options
         const platformRevenue = ordersData.reduce((acc, order) => {
             acc[order.platform] = (acc[order.platform] || 0) + order.sellingprice;
             return acc;
@@ -163,24 +40,38 @@ async function createCharts() {
                 datasets: [{
                     data: Object.values(platformRevenue),
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)', 
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)'
+                        COLOR_PALETTE.primary, 
+                        COLOR_PALETTE.secondary,
+                        COLOR_PALETTE.tertiary
                     ]
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Revenue by Sales Platform'
+                        text: 'Revenue Distribution by Sales Platform',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const value = context.parsed;
+                                const percentage = ((value / total) * 100).toFixed(2);
+                                return `₹${value.toLocaleString()} (${percentage}%)`;
+                            }
+                        }
                     }
                 }
             }
         });
 
-        // Expenses by Category Chart
+        // Expenses by Category Chart with gradient fill
         const expensesByCategory = expensesData.reduce((acc, expense) => {
             acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
             return acc;
@@ -193,30 +84,49 @@ async function createCharts() {
                 datasets: [{
                     label: 'Expenses',
                     data: Object.values(expensesByCategory),
-                    backgroundColor: 'rgba(75, 192, 192, 0.7)'
+                    backgroundColor: createGradientFill(
+                        document.getElementById('expensesCategoryChart').getContext('2d'), 
+                        COLOR_PALETTE.tertiary
+                    )
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Amount (₹)'
+                            text: 'Total Expenses (₹)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString();
+                            }
                         }
                     }
                 },
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Expenses by Category'
+                        text: 'Expenses Breakdown by Category',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `₹${context.parsed.y.toLocaleString()}`;
+                            }
+                        }
                     }
                 }
             }
         });
 
-        // Monthly Revenue Trend
+        // Monthly Revenue Trend with more detailed configuration
         const monthlyRevenue = ordersData.reduce((acc, order) => {
             const month = new Date(order.order_date).toLocaleString('default', { month: 'short' });
             acc[month] = (acc[month] || 0) + order.sellingprice;
@@ -230,33 +140,68 @@ async function createCharts() {
                 datasets: [{
                     label: 'Monthly Revenue',
                     data: Object.values(monthlyRevenue),
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    tension: 0.1
+                    borderColor: COLOR_PALETTE.secondary,
+                    backgroundColor: createGradientFill(
+                        document.getElementById('monthlyRevenueChart').getContext('2d'), 
+                        COLOR_PALETTE.secondary, 
+                        0.2
+                    ),
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    tension: 0.3
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Revenue (₹)'
+                            text: 'Total Revenue (₹)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString();
+                            }
                         }
                     }
                 },
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Monthly Revenue Trend'
+                        text: 'Monthly Revenue Progression',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `₹${context.parsed.y.toLocaleString()}`;
+                            }
+                        }
                     }
                 }
             }
         });
+
     } catch (error) {
-        console.error('Error creating charts:', error);
+        console.error('Comprehensive chart creation error:', error);
+        // Optional: Display user-friendly error message on the UI
+        document.getElementById('chartErrorMessage').textContent = 
+            'Unable to load charts. Please try again later.';
     }
+}
+
+// Utility function to create gradient fills for charts
+function createGradientFill(ctx, baseColor, opacity = 0.7) {
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, baseColor.replace('0.7', String(opacity)));
+    gradient.addColorStop(1, baseColor.replace('0.7', '0.1'));
+    return gradient;
 }
 
 // Call create charts when DOM is loaded
