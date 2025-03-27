@@ -123,6 +123,82 @@ document.getElementById('expenseForm').addEventListener('submit', async (e) => {
         console.error('Expense submission error:', error); 
     } 
 });
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  -->
+
+async function fetchOrders() {
+    try {
+        // Fetch orders data from Supabase
+        const { data: ordersData, error: ordersError } = await supabase
+            .from('orders')
+            .select('*');
+
+        if (ordersError) {
+            console.error('Error fetching orders:', ordersError);
+            return;
+        }
+
+        // Get the orders table element
+        const ordersTableBody = document.getElementById('ordersTable').getElementsByTagName('tbody')[0];
+
+        // Clear the table
+        ordersTableBody.innerHTML = '';
+
+        // Populate the table with the fetched orders data
+        ordersData.forEach(order => {
+            const row = ordersTableBody.insertRow();
+            row.innerHTML = `
+                <td>${order.sku}</td>
+                <td>${order.category}</td>
+                <td>${order.units}</td>
+                <td>₹${order.sellingprice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td>${order.order_date}</td>
+                <td>${order.platform}</td>
+            `;
+        });
+    } catch (error) {
+        console.error('Error displaying orders:', error);
+    }
+}
+
+// Function to display expenses in the table
+async function fetchExpenses() {
+    try {
+        // Fetch expenses data from Supabase
+        const { data: expensesData, error: expensesError } = await supabase
+            .from('expenses')
+            .select('*');
+
+        if (expensesError) {
+            console.error('Error fetching expenses:', expensesError);
+            return;
+        }
+
+        // Get the expenses table element
+        const expensesTableBody = document.getElementById('expensesTable').getElementsByTagName('tbody')[0];
+
+        // Clear the table
+        expensesTableBody.innerHTML = '';
+
+        // Populate the table with the fetched expenses data
+        expensesData.forEach(expense => {
+            const row = expensesTableBody.insertRow();
+            row.innerHTML = `
+                <td>${expense.category}</td>
+                <td>₹${expense.amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td>${expense.expense_date}</td>
+                <td>${expense.team_member}</td>
+            `;
+        });
+    } catch (error) {
+        console.error('Error displaying expenses:', error);
+    }
+}
+
+
+
+
+
+
 
 // Function to create charts
 async function createCharts() { 
@@ -269,4 +345,48 @@ async function createCharts() {
 document.addEventListener('DOMContentLoaded', () => {
     updateDashboardMetrics();
     createCharts();
+    fetchOrders();      // Fetch and display orders
+    fetchExpenses();
 });
+
+// Order Form Submission
+document.getElementById('orderForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // ... Order form data processing ...
+
+    try {
+        const { error } = await supabase.from('orders').insert([orderData]);
+        if (error) throw error;
+
+        alert('Order added successfully!');
+        e.target.reset();
+        updateDashboardMetrics();
+        createCharts();
+        fetchOrders();  // Refresh the orders table
+    } catch (error) {
+        alert('Error adding order: ' + error.message);
+        console.error('Order submission error:', error);
+    }
+});
+// Expense Form Submission
+document.getElementById('expenseForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // ... Expense form data processing ...
+
+    try {
+        const { error } = await supabase.from('expenses').insert([expenseData]);
+        if (error) throw error;
+
+        alert('Expense added successfully!');
+        e.target.reset();
+        updateDashboardMetrics();
+        createCharts();
+        fetchExpenses();  // Refresh the expenses table
+    } catch (error) {
+        alert('Error adding expense: ' + error.message);
+        console.error('Expense submission error:', error);
+    }
+});
+
