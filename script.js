@@ -8,27 +8,29 @@ const SKU_MAPPINGS = {
 };
 
 // Dynamic SKU Population
-document.getElementById('productCategory').addEventListener('change', function() { 
-    const skuSelect = document.getElementById('productSku'); 
-    const category = this.value; 
+function setupSkuDropdown() {
+    const productCategory = document.getElementById('productCategory');
+    const skuSelect = document.getElementById('productSku');
     
-    // Reset SKU select
-    skuSelect.innerHTML = '<option value="">Select SKU</option>'; 
-    
-    if (category && SKU_MAPPINGS[category]) { 
-        SKU_MAPPINGS[category].forEach(sku => { 
-            const option = document.createElement('option'); 
-            option.value = sku; 
-            option.textContent = sku; 
-            skuSelect.appendChild(option); 
-        }); 
-        skuSelect.disabled = false; 
-    } else { 
-        skuSelect.disabled = true; 
-    } 
-});
+    productCategory.addEventListener('change', function() { 
+        // Reset SKU select
+        skuSelect.innerHTML = '<option value="">Select SKU</option>'; 
+        
+        if (this.value && SKU_MAPPINGS[this.value]) { 
+            SKU_MAPPINGS[this.value].forEach(sku => { 
+                const option = document.createElement('option'); 
+                option.value = sku; 
+                option.textContent = sku; 
+                skuSelect.appendChild(option); 
+            }); 
+            skuSelect.disabled = false; 
+        } else { 
+            skuSelect.disabled = true; 
+        } 
+    });
+}
 
-// Dashboard Metrics
+// Dashboard Metrics Update
 async function updateDashboardMetrics() { 
     try { 
         // Fetch total orders count 
@@ -64,68 +66,72 @@ async function updateDashboardMetrics() {
     } 
 }
 
-// Order Form Submission
-document.getElementById('orderForm').addEventListener('submit', async (e) => { 
-    e.preventDefault(); 
-    
-    const orderData = { 
-        category: document.getElementById('productCategory').value, 
-        sku: document.getElementById('productSku').value, 
-        platform: document.getElementById('salesPlatform').value, 
-        team_member: document.getElementById('teamMember').value, 
-        units: parseInt(document.getElementById('orderUnits').value), 
-        order_date: document.getElementById('orderDate').value, 
-        remarks: document.getElementById('orderRemarks').value, 
-        gender: document.getElementById('personCategory').value, 
-        sellingprice: parseFloat(document.getElementById('sellingprice').value), 
-        buyingprice: parseFloat(document.getElementById('buyingprice').value), 
-        gst: document.getElementById('gst').value
-    }; 
-    
-    try { 
-        const { error } = await supabase.from('orders').insert([orderData]); 
+// Fetch and display orders
+async function fetchOrders() {
+    try {
+        const { data: orders, error } = await supabase
+            .from('orders')
+            .select('*')
+            .order('order_date', { ascending: false });
         
-        if (error) throw error; 
+        if (error) throw error;
+
+        const ordersTableBody = document.getElementById('ordersTableBody');
+        ordersTableBody.innerHTML = ''; // Clear existing rows
+
+        orders.forEach(order => {
+            const row = `
+                <tr>
+                    <td>${order.category}</td>
+                    <td>${order.sku}</td>
+                    <td>${order.platform}</td>
+                    <td>${order.gender}</td>
+                    <td>${order.units}</td>
+                    <td>₹${order.buyingprice.toFixed(2)}</td>
+                    <td>₹${order.sellingprice.toFixed(2)}</td>
+                    <td>${order.order_date}</td>
+                    <td>${order.team_member}</td>
+                    <td>${order.remarks || '-'}</td>
+                </tr>
+            `;
+            ordersTableBody.innerHTML += row;
+        });
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        alert('Failed to fetch orders: ' + error.message);
+    }
+}
+
+// Fetch and display expenses
+async function fetchExpenses() {
+    try {
+        const { data: expenses, error } = await supabase
+            .from('expenses')
+            .select('*')
+            .order('expense_date', { ascending: false });
         
-        alert('Order added successfully!'); 
-        e.target.reset(); 
-        updateDashboardMetrics(); 
-        createCharts(); 
-    } catch (error) { 
-        alert('Error adding order: ' + error.message); 
-        console.error('Order submission error:', error); 
-    } 
-});
+        if (error) throw error;
 
-// Expense Form Submission
-document.getElementById('expenseForm').addEventListener('submit', async (e) => { 
-    e.preventDefault(); 
-    
-    const expenseData = { 
-        category: document.getElementById('expenseCategory').value, 
-        amount: parseFloat(document.getElementById('expenseAmount').value), 
-        expense_date: document.getElementById('expenseDate').value, 
-        team_member: document.getElementById('expenseTeamMember').value, 
-        remarks: document.getElementById('expenseRemarks').value 
-    }; 
-    
-    try { 
-        const { error } = await supabase.from('expenses').insert([expenseData]); 
-        
-        if (error) throw error; 
-        
-        alert('Expense added successfully!'); 
-        e.target.reset(); 
-        updateDashboardMetrics(); 
-        createCharts(); 
-    } catch (error) { 
-        alert('Error adding expense: ' + error.message); 
-        console.error('Expense submission error:', error); 
-    } 
-});
+        const expensesTableBody = document.getElementById('expensesTableBody');
+        expensesTableBody.innerHTML = ''; // Clear existing rows
 
-
-
+        expenses.forEach(expense => {
+            const row = `
+                <tr>
+                    <td>${expense.category}</td>
+                    <td>₹${expense.amount.toFixed(2)}</td>
+                    <td>${expense.expense_date}</td>
+                    <td>${expense.team_member}</td>
+                    <td>${expense.remarks || '-'}</td>
+                </tr>
+            `;
+            expensesTableBody.innerHTML += row;
+        });
+    } catch (error) {
+        console.error('Error fetching expenses:', error);
+        alert('Failed to fetch expenses: ' + error.message);
+    }
+}
 
 // Function to create charts
 async function createCharts() { 
@@ -268,52 +274,88 @@ async function createCharts() {
     } 
 }
 
-// Initialize dashboard and charts on page load
-document.addEventListener('DOMContentLoaded', () => {
-    updateDashboardMetrics();
-    createCharts();
-    fetchOrders();      // Fetch and display orders
-    fetchExpenses();
-});
+// Order Form Submission Handler
+function setupOrderFormSubmission() {
+    document.getElementById('orderForm').addEventListener('submit', async (e) => { 
+        e.preventDefault(); 
+        
+        const orderData = { 
+            category: document.getElementById('productCategory').value, 
+            sku: document.getElementById('productSku').value, 
+            platform: document.getElementById('salesPlatform').value, 
+            team_member: document.getElementById('teamMember').value, 
+            units: parseInt(document.getElementById('orderUnits').value), 
+            order_date: document.getElementById('orderDate').value, 
+            remarks: document.getElementById('orderRemarks').value, 
+            gender: document.getElementById('personCategory').value, 
+            sellingprice: parseFloat(document.getElementById('sellingprice').value), 
+            buyingprice: parseFloat(document.getElementById('buyingprice').value), 
+            gst: document.getElementById('gst').value
+        }; 
+        
+        try { 
+            const { error } = await supabase.from('orders').insert([orderData]); 
+            
+            if (error) throw error; 
+            
+            alert('Order added successfully!'); 
+            e.target.reset(); 
+            updateDashboardMetrics(); 
+            createCharts(); 
+            fetchOrders();  // Refresh the orders table
+        } catch (error) { 
+            alert('Error adding order: ' + error.message); 
+            console.error('Order submission error:', error); 
+        } 
+    });
+}
 
-// Order Form Submission
-document.getElementById('orderForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    // ... Order form data processing ...
+// Expense Form Submission Handler
+function setupExpenseFormSubmission() {
+    document.getElementById('expenseForm').addEventListener('submit', async (e) => { 
+        e.preventDefault(); 
+        
+        const expenseData = { 
+            category: document.getElementById('expenseCategory').value, 
+            amount: parseFloat(document.getElementById('expenseAmount').value), 
+            expense_date: document.getElementById('expenseDate').value, 
+            team_member: document.getElementById('expenseTeamMember').value, 
+            remarks: document.getElementById('expenseRemarks').value 
+        }; 
+        
+        try { 
+            const { error } = await supabase.from('expenses').insert([expenseData]); 
+            
+            if (error) throw error; 
+            
+            alert('Expense added successfully!'); 
+            e.target.reset(); 
+            updateDashboardMetrics(); 
+            createCharts(); 
+            fetchExpenses();  // Refresh the expenses table
+        } catch (error) { 
+            alert('Error adding expense: ' + error.message); 
+            console.error('Expense submission error:', error); 
+        } 
+    });
+}
 
-    try {
-        const { error } = await supabase.from('orders').insert([orderData]);
-        if (error) throw error;
+// Initialize Application
+function initializeApp() {
+    // Setup event listeners and initial data load
+    document.addEventListener('DOMContentLoaded', () => {
+        // Setup dynamic components
+        setupSkuDropdown();
+        setupOrderFormSubmission();
+        setupExpenseFormSubmission();
 
-        alert('Order added successfully!');
-        e.target.reset();
+        // Load initial data
         updateDashboardMetrics();
         createCharts();
-        fetchOrders();  // Refresh the orders table
-    } catch (error) {
-        alert('Error adding order: ' + error.message);
-        console.error('Order submission error:', error);
-    }
-});
-// Expense Form Submission
-document.getElementById('expenseForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    // ... Expense form data processing ...
+        fetchOrders();
+        fetchExpenses();
+    });
+}
 
-    try {
-        const { error } = await supabase.from('expenses').insert([expenseData]);
-        if (error) throw error;
-
-        alert('Expense added successfully!');
-        e.target.reset();
-        updateDashboardMetrics();
-        createCharts();
-        fetchExpenses();  // Refresh the expenses table
-    } catch (error) {
-        alert('Error adding expense: ' + error.message);
-        console.error('Expense submission error:', error);
-    }
-});
-
+// Start the application
+initializeApp();
