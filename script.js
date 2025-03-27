@@ -79,6 +79,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
         gender: document.getElementById('personCategory').value, 
         sellingprice: parseFloat(document.getElementById('sellingprice').value), 
         buyingprice: parseFloat(document.getElementById('buyingprice').value), 
+        gst: document.getElementById('gst').value
     }; 
     
     try { 
