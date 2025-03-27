@@ -131,11 +131,6 @@ body {
     overflow-y: auto;
 }
 
-.nav-tabs .nav-link.active {
-    background-color: #798ba0;
-    border-color: #dee2e6 #dee2e6 #f8f9fa;
-}
-
 form .form-control {
     margin-bottom: 10px;
 }
