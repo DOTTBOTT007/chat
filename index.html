@@ -5,7 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clothing Business Manager</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            padding-top: 30px;
+            color: #333;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 25px;
+            max-width: 1200px;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid #007bff;
+        }
+
+        .nav-tabs .nav-link {
+            color: #495057;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+            border-color: #007bff;
+        }
+
+        .card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            font-weight: 600;
+        }
+
+        .form-control, .btn {
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .card canvas {
+            max-height: 350px;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .metric-card {
+            background-color: #f8f9fa;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .metric-card-orders {
+            border-left-color: #28a745;
+        }
+
+        .metric-card-revenue {
+            border-left-color: #007bff;
+        }
+
+        .metric-card-expenses {
+            border-left-color: #dc3545;
+        }
+
+        #dashboard .card-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #212529;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -92,8 +191,128 @@
                 </div>
             </div>
 
-            <!-- Rest of the HTML remains the same as in the original file -->
-            <!-- (Orders and Expenses tabs) -->
+            <!-- Orders Tab -->
+            <div class="tab-pane fade" id="orders">
+                <div class="card">
+                    <div class="card-header">Add New Order</div>
+                    <div class="card-body">
+                        <form id="orderForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select class="form-control" id="productCategory" required>
+                                        <option value="">Select Product Category</option>
+                                        <option value="Nightsuit">Nightsuit</option>
+                                        <option value="Shirt">Shirt</option>
+                                        <option value="Lehenga">Lehenga</option>
+                                        <option value="Kurti">Kurti</option>
+                                        <option value="Dress">Dress</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="productSku" required disabled>
+                                        <option value="">Select SKU (Select Category First)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <select class="form-control" id="personCategory" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Children">Children</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="salesPlatform" required>
+                                        <option value="">Select Sales Platform</option>
+                                        <option value="Amazon">Amazon</option>
+                                        <option value="Flipkart">Flipkart</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="teamMember" required>
+                                        <option value="">Select Team Member</option>
+                                        <option value="Gaurang">Gaurang</option>
+                                        <option value="Sumit">Sumit</option>
+                                    </select>
+                                </div>
+                            </div>
+                             <div class="row">
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control" id="buyingprice" 
+                                           placeholder="Buying Price" step="0.01" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control" id="sellingprice" 
+                                           placeholder="Selling Price" step="0.01" required>
+                                </div>
+                            </div>
+                                 
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control" id="orderUnits" 
+                                           placeholder="Units" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" id="orderDate" required>
+                                </div>
+                            </div>
+
+                            <textarea class="form-control" id="orderRemarks" 
+                                      placeholder="Additional Remarks (Optional)"></textarea>
+
+                            <button type="submit" class="btn btn-primary w-100">Add Order</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expenses Tab -->
+            <div class="tab-pane fade" id="expenses">
+                <div class="card">
+                    <div class="card-header">Add New Expense</div>
+                    <div class="card-body">
+                        <form id="expenseForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select class="form-control" id="expenseCategory" required>
+                                        <option value="">Select Expense Category</option>
+                                        <option value="Petrol">Petrol</option>
+                                        <option value="Bags">Bags</option>
+                                        <option value="Packaging">Packaging</option>
+                                        <option value="Travel">Travel</option>
+                                        <option value="Utilities">Utilities</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control" id="expenseAmount" 
+                                           placeholder="Amount" step="0.01" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" id="expenseDate" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="expenseTeamMember" required>
+                                        <option value="">Select Team Member</option>
+                                        <option value="Gaurang">Gaurang</option>
+                                        <option value="Sumit">Sumit</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <textarea class="form-control" id="expenseRemarks" 
+                                      placeholder="Additional Remarks (Optional)"></textarea>
+
+                            <button type="submit" class="btn btn-primary w-100">Add Expense</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -102,8 +321,249 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- Configuration and Main Script -->
-    <script src="config.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // SKU Mappings 
+        const SKU_MAPPINGS = { 
+            'Nightsuit': [ 'NS001 - Cotton Nightsuit', 'NS002 - Silk Nightsuit', 'NS003 - Winter Nightsuit' ], 
+            'Shirt': [ 'SH001 - Casual Shirt', 'SH002 - Formal Shirt' ], 
+            'Lehenga': [ 'LH001 - Traditional Lehenga', 'LH002 - Wedding Lehenga' ], 
+            'Kurti': [ 'KT001 - Cotton Kurti', 'KT002 - Silk Kurti' ], 
+            'Dress': [ 'DR001 - Party Dress', 'DR002 - Casual Dress' ] 
+        };
+
+        // Dynamic SKU Population
+        document.getElementById('productCategory').addEventListener('change', function() { 
+            const skuSelect = document.getElementById('productSku'); 
+            const category = this.value; 
+            skuSelect.innerHTML = '<option value="">Select SKU</option>'; 
+            if (category && SKU_MAPPINGS[category]) { 
+                SKU_MAPPINGS[category].forEach(sku => { 
+                    const option = document.createElement('option'); 
+                    option.value = sku; 
+                    option.textContent = sku; 
+                    skuSelect.appendChild(option); 
+                }); 
+                skuSelect.disabled = false; 
+            } else { 
+                skuSelect.disabled = true; 
+            } 
+        });
+
+        // Number Animation Function
+        function animateNumberChange(elementId, finalValue, prefix = '') {
+            const element = document.getElementById(elementId);
+            const duration = 1500; // Animation duration in ms
+            const startValue = parseInt(element.textContent.replace(/[^0-9.-]+/g,'')) || 0;
+            
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const currentValue = Math.floor(progress * (finalValue - startValue) + startValue);
+                
+                element.textContent = `${prefix}${currentValue.toLocaleString()}`;
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    element.textContent = `${prefix}${finalValue.toLocaleString()}`;
+                }
+            };
+            
+            window.requestAnimationFrame(step);
+        }
+
+        // Configure Supabase (replace with your actual configuration)
+        const supabase = {
+            from: () => ({
+                select: () => ({ 
+                    count: () => ({ count: 0 }), 
+                    data: [] 
+                })
+            })
+        };
+
+        // Dashboard Metrics
+        async function updateDashboardMetrics() { 
+            try { 
+                // Fetch total orders count 
+                const { count: ordersCount } = await supabase 
+                    .from('orders') 
+                    .select('*', { count: 'exact' }); 
+
+                // Fetch total revenue 
+                const { data: revenueData } = await supabase 
+                    .from('orders') 
+                    .select('sellingprice'); 
+                
+                const totalRevenue = revenueData.reduce((sum, order) => sum + order.sellingprice, 0); 
+
+                // Fetch total expenses 
+                const { data: expensesData } = await supabase 
+                    .from('expenses') 
+                    .select('amount'); 
+                
+                const totalExpenses = expensesData.reduce((sum, expense) => sum + expense.amount, 0); 
+
+                // Profit Calculation
+                const totalProfit = totalRevenue - totalExpenses;
+
+                // Update dashboard with animations
+                animateNumberChange('totalOrdersCount', ordersCount || 0);
+                animateNumberChange('totalRevenueAmount', totalRevenue, '₹');
+                animateNumberChange('totalExpensesAmount', totalExpenses, '₹');
+                animateNumberChange('totalProfitAmount', totalProfit, '₹');
+
+            } catch (error) { 
+                console.error('Error updating dashboard:', error); 
+            } 
+        }
+
+        // Chart Creation Function
+        async function createCharts() { 
+            // Mock data for demonstration 
+            const ordersData = [
+                { platform: 'Amazon', sellingprice: 5000, order_date: '2024-01-15' },
+                { platform: 'Flipkart', sellingprice: 3000, order_date: '2024-02-20' }
+            ];
+
+            const expensesData = [
+                { category: 'Petrol', amount: 1000 },
+                { category: 'Packaging', amount: 500 }
+            ];
+
+            // Revenue by Platform Chart 
+            const platformRevenue = ordersData.reduce((acc, order) => { 
+                acc[order.platform] = (acc[order.platform] || 0) + order.sellingprice; 
+                return acc; 
+            }, {}); 
+
+            new Chart(document.getElementById('platformRevenueChart'), { 
+                type: 'doughnut', 
+                data: { 
+                    labels: Object.keys(platformRevenue), 
+                    datasets: [{ 
+                        data: Object.values(platformRevenue), 
+                        backgroundColor: [ 
+                            'rgba(255, 99, 132, 0.7)', 
+                            'rgba(54, 162, 235, 0.7)' 
+                        ],
+                        borderWidth: 1
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    plugins: { 
+                        title: { 
+                            display: true, 
+                            text: 'Revenue by Sales Platform' 
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    } 
+                } 
+            }); 
+
+            // Expenses by Category Chart 
+            const expensesByCategory = expensesData.reduce((acc, expense) => { 
+                acc[expense.category] = (acc[expense.category] || 0) + expense.amount; 
+                return acc; 
+            }, {}); 
+
+            new Chart(document.getElementById('expensesCategoryChart'), { 
+                type: 'bar', 
+                data: { 
+                    labels: Object.keys(expensesByCategory), 
+                    datasets: [{ 
+                        label: 'Expenses', 
+                        data: Object.values(expensesByCategory), 
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            title: { 
+                                display: true, 
+                                text: 'Amount (₹)' 
+                            } 
+                        } 
+                    }, 
+                    plugins: { 
+                        title: { 
+                            display: true, 
+                            text: 'Expenses by Category' 
+                        },
+                        legend: {
+                            display: false
+                        }
+                    } 
+                } 
+            }); 
+
+            // Monthly Revenue Trend 
+            const monthlyRevenue = ordersData.reduce((acc, order) => { 
+                const month = new Date(order.order_date).toLocaleString('default', { month: 'short' }); 
+                acc[month] = (acc[month] || 0) + order.sellingprice; 
+                return acc; 
+            }, {}); 
+
+            new Chart(document.getElementById('monthlyRevenueChart'), { 
+                type: 'line', 
+                data: { 
+                    labels: Object.keys(monthlyRevenue), 
+                    datasets: [{ 
+                        label: 'Monthly Revenue', 
+                        data: Object.values(monthlyRevenue), 
+                        borderColor: 'rgba(255, 99, 132, 1)', 
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)', 
+                        tension: 0.1 
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            title: { 
+                                display: true, 
+                                text: 'Revenue (₹)' 
+                            } 
+                        } 
+                    }, 
+                    plugins: { 
+                        title: { 
+                            display: true, 
+                            text: 'Monthly Revenue Trend' 
+                        } 
+                    } 
+                } 
+            }); 
+        } 
+
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDashboardMetrics();
+            createCharts();
+        });
+
+        // Form Submissions
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Add order submission logic here
+            alert('Order submitted (mock)');
+        });
+
+        document.getElementById('expenseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Add expense submission logic here
+            alert('Expense submitted (mock)');
+        });
+    </script>
 </body>
 </html>
