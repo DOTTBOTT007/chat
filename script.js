@@ -67,6 +67,7 @@ async function updateDashboardMetrics() {
 }
 
 // Fetch and display orders
+// Fetch and display orders
 async function fetchOrders() {
     try {
         const { data: orders, error } = await supabase
@@ -80,6 +81,12 @@ async function fetchOrders() {
         ordersTableBody.innerHTML = ''; // Clear existing rows
 
         orders.forEach(order => {
+            // Calculate platform fees (38% of selling price)
+            const platformFees = order.sellingprice * 0.38;
+            
+            // Calculate final profit (selling price - platform fees - buying price)
+            const finalProfit = order.sellingprice - platformFees - order.buyingprice;
+            
             const row = `
                 <tr>
                     <td>${order.category}</td>
@@ -89,6 +96,8 @@ async function fetchOrders() {
                     <td>${order.units}</td>
                     <td>₹${order.buyingprice.toFixed(2)}</td>
                     <td>₹${order.sellingprice.toFixed(2)}</td>
+                    <td>₹${platformFees.toFixed(2)}</td>
+                    <td>₹${finalProfit.toFixed(2)}</td>
                     <td>${order.order_date}</td>
                     <td>${order.team_member}</td>
                     <td>${order.remarks || '-'}</td>
@@ -101,6 +110,40 @@ async function fetchOrders() {
         alert('Failed to fetch orders: ' + error.message);
     }
 }
+// async function fetchOrders() {
+//     try {
+//         const { data: orders, error } = await supabase
+//             .from('orders')
+//             .select('*')
+//             .order('order_date', { ascending: false });
+        
+//         if (error) throw error;
+
+//         const ordersTableBody = document.getElementById('ordersTableBody');
+//         ordersTableBody.innerHTML = ''; // Clear existing rows
+
+//         orders.forEach(order => {
+//             const row = `
+//                 <tr>
+//                     <td>${order.category}</td>
+//                     <td>${order.sku}</td>
+//                     <td>${order.platform}</td>
+//                     <td>${order.gender}</td>
+//                     <td>${order.units}</td>
+//                     <td>₹${order.buyingprice.toFixed(2)}</td>
+//                     <td>₹${order.sellingprice.toFixed(2)}</td>
+//                     <td>${order.order_date}</td>
+//                     <td>${order.team_member}</td>
+//                     <td>${order.remarks || '-'}</td>
+//                 </tr>
+//             `;
+//             ordersTableBody.innerHTML += row;
+//         });
+//     } catch (error) {
+//         console.error('Error fetching orders:', error);
+//         alert('Failed to fetch orders: ' + error.message);
+//     }
+// }
 
 // Fetch and display expenses
 async function fetchExpenses() {
